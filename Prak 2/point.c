@@ -1,18 +1,18 @@
+// NIM              : 13521116
+// Nama             : Juan Christopher Santoso
+// Tanggal          : 6 September 2022
+// Topik praktikum  : Pra Praktikum 2
+// Deskripsi        : Membuat realisasi ADT Point
+
+
 /* File: point.h */
 /* Tanggal: 3 September 2022 */
 /* *** Definisi ABSTRACT DATA TYPE POINT *** */
 
-#ifndef POINT_H
-#define POINT_H
-
 #include "boolean.h"
 #include <stdio.h>
 #include <math.h>
-
-typedef struct { 
-	float X; /* absis   */
-	float Y; /* ordinat */
-} POINT;
+#include <point.h>
 
 /* *** Notasi Akses: Selektor POINT *** */
 #define Absis(P) (P).X
@@ -216,9 +216,7 @@ void Putar (POINT *P, float Sudut)
     float tempX = Absis(*P);
     float tempY = Ordinat(*P);
     float pi = 3.14159265;
-    Rad = Sudut * pi / 180;
+    Rad = -1* (Sudut * pi / 180);
     Absis(*P) = tempX * cos(Rad) - tempY * sin(Rad);
     Ordinat(*P) = tempX * sin(Rad) + tempY * cos(Rad);
 }
-
-#endif

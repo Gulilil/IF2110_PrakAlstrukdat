@@ -1,3 +1,10 @@
+// NIM              : 13521116
+// Nama             : Juan Christopher Santoso
+// Tanggal          : 6 September 2022
+// Topik praktikum  : Pra Praktikum 2
+// Deskripsi        : Membuat realisasi ADT Time
+
+
 /* File: time.h */
 /* Tanggal: 3 September 2022 */
 /* Definisi ADT TIME */

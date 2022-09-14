@@ -1,24 +1,17 @@
+// NIM              : 13521116
+// Nama             : Juan Christopher Santoso
+// Tanggal          : 6 September 2022
+// Topik praktikum  : Pra Praktikum 2
+// Deskripsi        : Membuat realisasi ADT Time
+
+
 /* File: time.h */
 /* Tanggal: 3 September 2022 */
 /* Definisi ADT TIME */
 
-#ifndef TIME_H
-#define TIME_H
-
 #include "boolean.h"
+#include "time.h"
 #include <stdio.h>
-
-/* *** Definisi TYPE TIME <HH:MM:SS> *** */
-typedef struct { 
-	int HH; /* integer [0..23] */
-	int MM; /* integer [0..59] */
-	int SS; /* integer [0..59] */
-} TIME;
-
-/* *** Notasi Akses: selektor TIME *** */
-#define Hour(T) (T).HH
-#define Minute(T) (T).MM
-#define Second(T) (T).SS
 
 /* ***************************************************************** */
 /* DEFINISI PRIMITIF                                                 */
@@ -69,6 +62,7 @@ void BacaTIME (TIME * T)
     int S;
     scanf("%d %d %d", &H, &M, &S);
     while (IsTIMEValid(H, M, S) == false){
+        printf("Jam tidak valid\n");
         scanf("%d %d %d", &H, &M, &S);
     }
     CreateTime(T, H, M, S);
@@ -99,11 +93,22 @@ TIME DetikToTIME (long N)
 /* Catatan: Jika N >= 86400, maka harus dikonversi dulu menjadi jumlah detik yang 
    mewakili jumlah detik yang mungkin dalam 1 hari, yaitu dengan rumus: 
    N1 = N mod 86400, baru N1 dikonversi menjadi TIME */
-{
+{   
+    int h;
+    int m;
+    int s;
     TIME T;
-    Hour(T) = (N - N % 3600) /3600;
-    Minute(T) = ((N % 3600) - (N % 3600 % 60)) / 60;
-    Second(T) = (N % 3600) % 60;
+
+    // jika N > 3600*24
+    if (N >= 3600*24) {
+        N = N % (3600*24);
+    }
+
+    h = (N - (N % 3600)) /3600;
+    m = ((N % 3600) - (N % 3600 % 60)) / 60;
+    s = (N % 3600) % 60;
+
+    CreateTime(&T, h, m, s);
     return T;
 }
 
@@ -114,7 +119,9 @@ TIME DetikToTIME (long N)
 boolean TEQ (TIME T1, TIME T2)
 /* Mengirimkan true jika T1=T2, false jika tidak */
 {
-    if (Hour(T1) == Hour(T2) && Minute(T1) == Minute(T2) && Second(T1) == Second(T2)){
+    long int time1 = TIMEToDetik(T1);
+    long int time2 = TIMEToDetik(T2);
+    if (time1 == time2){
         return true;
     } else {
         return false;
@@ -123,7 +130,9 @@ boolean TEQ (TIME T1, TIME T2)
 boolean TNEQ (TIME T1, TIME T2)
 /* Mengirimkan true jika T1 tidak sama dengan T2 */
 {
-    if (Hour(T1) == Hour(T2) && Minute(T1) == Minute(T2) && Second(T1) == Second(T2)){
+    long int time1 = TIMEToDetik(T1);
+    long int time2 = TIMEToDetik(T2);
+    if (time1 == time2){
         return false;
     } else {
         return true;
@@ -158,6 +167,10 @@ TIME NextDetik (TIME T)
 {
     long int time = TIMEToDetik(T);
     time = time +1;
+    // Kalau ganti hari
+    if (time >= 3600*24){
+        time = time % 3600*24;
+    }
     T = DetikToTIME(time);
     return T;
 }
@@ -166,6 +179,10 @@ TIME NextNDetik (TIME T, int N)
 {
     long int time = TIMEToDetik(T);
     time = time + N;
+    // Kalau ganti hari
+    if (time >= 3600*24){
+        time = time % (3600*24);
+    }
     T = DetikToTIME(time);
     return T;
 }
@@ -174,6 +191,10 @@ TIME PrevDetik (TIME T)
 {
     long int time = TIMEToDetik(T);
     time = time -1;
+    // Kalau hari sebelumnya
+    if (time < 0){
+        time = time + 3600*24;
+    }
     T = DetikToTIME(time);
     return T;
 }
@@ -183,6 +204,13 @@ TIME PrevNDetik (TIME T, int N)
 {
     long int time = TIMEToDetik(T);
     time = time - N;
+
+    // Kalau hari sebelumnya
+    if (time < 0){
+        // sisa akan bernilai negatif dan bisa aja hasilnya lebih dari x hari sebelumnya;
+        long int remain = -1*time % (3600*24);
+        time = 3600*24 - remain ;
+    }
     T = DetikToTIME(time);
     return T;
 }
@@ -195,11 +223,10 @@ long Durasi (TIME TAw, TIME TAkh)
     long int duration;
 
     // timeAw < timeAkh
-    if (TLT(TAw, TAkh) == true){
+    if (timeAkh >= timeAw){
         duration = timeAkh - timeAw;
     } else {
         duration = timeAkh + (3600*24 - timeAw);
     }
-
+    return duration;
 }
-#endif

@@ -1,20 +1,15 @@
 #include <stdio.h>
 #include "point.c"
 #include "time.c"
+#include "garis.c"
 #include <stdbool.h>
 
 int main () {
-    /*
-    TIME T1;
-    TIME T2;
-    long int n;
 
-    BacaTIME(&T1);
-    BacaTIME(&T2);
+    GARIS L;
 
-    n = Durasi(T1, T2);
+    BacaGARIS(&L);
 
-    printf("%d", n);
-    */
+    TulisGARIS(L);
     return 0;
 }
