@@ -1,0 +1,155 @@
+//NIM: 13521135
+//Nama: Nicholas Liem
+//Tanggal: 05 Oktober 2022
+//Topik: ADT Mesin Kata
+
+#include <stdio.h>
+#include <string.h>
+#include "wordmachine.h"
+#include "boolean.h"
+
+boolean endWord;
+Word currentWord;
+
+boolean stringChecker(Word cWord, char *s){
+	int wordLength = cWord.Length;
+	if (strlen(s) == wordLength){
+		int i;
+		for (i = 0; i < wordLength; i++){
+			if (cWord.TabWord[i] != s[i]){
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+boolean isBilangan(Word cWord, char *bilangan[]){
+	int i;
+	for (i = 0; i<20; i++){
+		if (stringChecker(cWord, bilangan[i])){
+			return true;
+		}
+	}
+	return false;
+}
+
+int returnDigit(Word cWord, char *bilangan[]){
+	int i = 0;
+	if (stringChecker(cWord, bilangan[10])){
+		return i;
+	} else {
+		for (i = 0; i < 10; i++){
+			if (stringChecker(cWord, bilangan[i])){
+				return i + 1;
+		}
+		}
+	}
+	return i;
+}
+
+int main(){
+	int res;
+	char *bilangan[] = {"satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "nol", "sebelas", "belas", "puluh", "seratus", "ratus", "seribu", "ribu", "sejuta", "juta"};
+	endWord = false;
+	STARTWORD();
+	while(!endWord){
+		if (isBilangan(currentWord, bilangan)){
+			res = 0;
+			while(isBilangan(currentWord, bilangan)){
+				if (stringChecker(currentWord, "seribu")){
+					res += 1000;
+					ADVWORD();
+					if(endWord){
+						break;
+					}
+				}
+				else if (stringChecker(currentWord, "seratus")){
+					res += 100;
+					ADVWORD();
+					if (endWord){ 
+						break;
+					}
+				}
+				else if(stringChecker(currentWord, "sepuluh")){
+					res += 10; 
+					ADVWORD();
+					if (endWord){
+						break;
+					}
+				}
+				else if(stringChecker(currentWord, "sebelas")){
+					res += 11;
+					ADVWORD();
+					if (endWord){
+						break;
+					}
+				} else if(stringChecker(currentWord, "sejuta")){
+					res += 1000000;
+					ADVWORD();
+					if (endWord){
+						break;
+					}
+				}
+				else{
+					int temp = returnDigit(currentWord, bilangan);
+					ADVWORD();
+					if (endWord) {
+						res += temp;
+						break;
+					} else if (stringChecker(currentWord, "juta")){
+						res += temp * 1000000;
+						ADVWORD();
+						if (endWord){
+							break;
+						}
+					} else if (stringChecker(currentWord, "ribu")){
+						res += temp * 1000;
+						ADVWORD();
+						if (endWord){
+							break;
+						}
+					} else if (stringChecker(currentWord, "ratus")){
+						res += temp * 100;
+						ADVWORD();
+						if (endWord){
+							break;
+						}
+					} else if (stringChecker(currentWord, "puluh")){
+						res += temp * 10;
+						ADVWORD();
+						if (endWord){
+							break;
+						}
+					} else if (stringChecker(currentWord, "belas")){
+						res += temp + 10;
+						ADVWORD();
+						if (endWord){
+							break;
+						}
+					} else {
+						res += temp;
+						break;
+					}
+				}
+			}	
+			if (!endWord){
+				printf("%d ", res);
+			}
+			else{
+				printf("%d", res);
+			}
+		}
+		else{
+			for (int i = 0; i < currentWord.Length; i++){
+				printf("%c", currentWord.TabWord[i]);
+			}
+			ADVWORD();
+			if (!endWord){
+				printf(" ");
+			}
+		}
+	}
+	printf("\n");
+}

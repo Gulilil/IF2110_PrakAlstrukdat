@@ -1,0 +1,154 @@
+//Nama: Nicholas Liem
+//NIM: 13521135
+//Tanggal: 20 Oktober 2022
+//Topik Praktikum: Stack
+//Deskripsi: Implementasi ADT Stack
+
+#include "stack.h"
+#include <stdio.h>
+
+void printStack(Stack s){
+  int temp;
+  while(!IsEmpty(s)){
+      Pop(&s, &temp);
+      printf("%d\n", temp);
+  }
+}
+
+boolean isGreater(Stack S1, Stack S2){
+  boolean besar, sblmNyaFalse;
+  if (Top(S1) > Top(S2)){
+    return true;
+  } else if (Top(S2) > Top(S1)) {
+    return false;
+  } else { //Ukurannya sama
+
+    int i, tempS1, tempS2;
+    int batas = Top(S1);
+
+    for(i = 0; i < batas; i++){
+      Pop(&S1, &tempS1);
+      Pop(&S2, &tempS2);
+      if (tempS1 > tempS2){
+        besar = true;
+        sblmNyaFalse = false;
+      } else if (tempS1 == tempS2 && sblmNyaFalse) {
+        besar = false;
+      } else if (tempS1 == tempS2 && !sblmNyaFalse) {
+        besar = true;
+      } else if (tempS1 < tempS2) {
+        sblmNyaFalse = true;
+        besar = false;
+      }
+      }
+
+    //Cek bilangan paling depan, kalo ukuran sama.
+    Pop(&S1, &tempS1);
+    Pop(&S2, &tempS2);
+    if (tempS1 < tempS2){
+      besar = false;
+      }
+    }
+
+  return besar;
+}
+
+Stack hitung(Stack sTinggi, Stack sRendah){
+  Stack sTemp, sRendahBaru, TEMP;
+  CreateEmpty(&sTemp);
+  CreateEmpty(&sRendahBaru);
+  CreateEmpty(&TEMP);
+  
+  int kRendah, kTinggi, temp;
+  int difference = Top(sTinggi) - Top(sRendah);
+
+  int i;
+  for(i = 0; i < difference; i++){
+    Push(&sRendahBaru, 0);
+  }
+
+  while(!IsEmpty(sRendah)){
+    Pop(&sRendah, &temp);
+    Push(&TEMP, temp);
+  }
+
+  while(!IsEmpty(TEMP)){
+    Pop(&TEMP, &temp);
+    Push(&sRendahBaru, temp);
+  }
+  // printStack(sTinggi);
+  // printf("===>\n");
+  // printStack(sRendahBaru);
+
+  //Sekarang ukuran sRendahBaru == sTinggi
+  int res, carryier;
+  carryier = 0;
+  while(!IsEmpty(sRendahBaru)){
+    Pop(&sTinggi, &kTinggi);
+    Pop(&sRendahBaru, &kRendah);
+    res = kTinggi - kRendah + carryier;
+    if (res < 0){
+      carryier = -1;
+      res += 10;
+    } else {
+      carryier = 0;
+    }
+    Push(&sTemp, res);
+  }
+
+  //ngilangin trailing zeros di depan
+  while(InfoTop(sTemp) == 0 && Top(sTemp) > 0){
+    Pop(&sTemp, &temp);
+  }
+
+  return sTemp;
+}
+
+int main(){
+	Stack S1, S2;
+  char str1[200], str2[200];
+	CreateEmpty(&S1);
+	CreateEmpty(&S2);
+	char temp;
+    //inisialisasi stack
+    int i = 0;
+    fgets(str1, 200, stdin);
+    while (str1[i] != '\n') {
+      if (str1[i]-48 >= 0){
+        Push(&S1, str1[i]-48);
+      }
+      i++;
+  	}
+    i = 0;
+    fgets(str2, 200, stdin);
+    while (str2[i] != '\n') {
+      if (str2[i]-48 >= 0){
+        Push(&S2, str2[i]-48);
+      }
+      i++;
+  	}
+
+  int tempPrint;
+  if (isGreater(S1, S2)){ 
+    Stack sHasil = hitung(S1, S2);
+    while(!IsEmpty(sHasil)){
+      Pop(&sHasil, &tempPrint);
+      printf("%d", tempPrint);
+    }
+  } else {
+    Stack sHasil = hitung(S2, S1);
+    Pop(&sHasil, &tempPrint);
+    if (tempPrint == 0){
+      printf("%d", tempPrint);
+    } else {
+      printf("%d", (-1)*tempPrint);
+    }
+    while(!IsEmpty(sHasil)){
+      Pop(&sHasil, &tempPrint);
+      printf("%d", tempPrint);
+    }
+  }
+  
+  printf("\n");
+	return 0;
+}
