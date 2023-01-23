@@ -1,7 +1,7 @@
 <h1> Praktikum Alstrukdat </h1>
 
 ## **Table of Contents**
-| Minggu | Topik | Nilai Praktikum <br> | Nilai Terakhir | Keterangan |
+| Minggu | Topik | Nilai Praktikum | Nilai Latihan Praktikum | Keterangan |
 |------|--------|-------|---------------|--|
 | 1   | Pengenalan C | | | Telat submit jadi nilainya ga keluar|
 | 2 | ADT Sederhana| 81.25 | 100 ||
